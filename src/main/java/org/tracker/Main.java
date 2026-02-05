@@ -2,18 +2,18 @@ package org.tracker;
 
 import org.tracker.dao.ApplicationDAO;
 import org.tracker.entity.Application;
+import java.sql.*;
 import java.util.List;
 import java.util.Scanner;
 
-
 public class Main {
-
     public static void main(String[] args) {
-
         try {
-
             ApplicationDAO dao = new ApplicationDAO();
             Scanner sc = new Scanner(System.in);
+
+            // Для тестирования, задаем userId вручную (в реальной системе это будет ID текущего пользователя после логина)
+            int userId = 1; // Это пример, в реальной системе нужно получить это значение после логина пользователя
 
             while (true) {
                 System.out.println("\n=== Application Tracker ===");
@@ -45,11 +45,15 @@ public class Main {
                     System.out.print("Status (Applied/Interview/Offer/Rejected): ");
                     String status = sc.nextLine();
 
+                    // Создаем новый объект Application
                     Application app = new Application(company, position, status);
-                    dao.addApplication(app);
+
+                    // Передаем user_id и заявку в метод addApplication
+                    dao.addApplication(userId, app);  // Мы передаем user_id
 
                     System.out.println("Application saved!");
                 }
+
                 if (choice == 2) {
                     List<Application> apps = dao.getAllApplications();
 
@@ -84,15 +88,3 @@ public class Main {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
