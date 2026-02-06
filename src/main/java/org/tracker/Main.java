@@ -13,7 +13,7 @@ public class Main {
             ApplicationDAO dao = new ApplicationDAO();
             Scanner sc = new Scanner(System.in);
 
-            int userId = 0; // Initialize userId as 0. It will be set after login.
+            int userId = 0;
 
             while (true) {
                 System.out.println("\n=== Application Tracker ===");
@@ -38,30 +38,29 @@ public class Main {
                 }
 
                 if (choice == 1) {
-                    // Register functionality
                     System.out.print("Enter username: ");
                     String username = sc.nextLine();
 
                     System.out.print("Enter password: ");
                     String password = sc.nextLine();
 
-                    // Call the registerUser method from ApplicationDAO
-                    dao.registerUser(username, password);  // Register user
+
+                    dao.registerUser(username, password);
                     System.out.println("User registered successfully!");
                 }
 
                 if (choice == 2) {
-                    // Login functionality
+
                     System.out.print("Enter username: ");
                     String username = sc.nextLine();
 
                     System.out.print("Enter password: ");
                     String password = sc.nextLine();
 
-                    // Call the loginUser method from ApplicationDAO
+
                     if (dao.loginUser(username, password)) {
                         System.out.println("Login successful!");
-                        userId = dao.getUserIdFromDatabase(username);  // Get userId after successful login
+                        userId = dao.getUserIdFromDatabase(username);
                     } else {
                         System.out.println("Invalid username or password.");
                     }
@@ -82,13 +81,8 @@ public class Main {
 
                     System.out.print("Status (Applied/Interview/Offer/Rejected): ");
                     String status = sc.nextLine();
-
-                    // Create a new Application object
                     Application app = new Application(company, position, status);
-
-                    // Pass user_id and application to the addApplication method
                     dao.addApplication(userId, app);
-
                     System.out.println("Application saved!");
                 }
 
@@ -112,8 +106,8 @@ public class Main {
                     }
                 }
 
+
                 if (choice == 5) {
-                    // Update application status
                     if (userId == 0) {
                         System.out.println("Please login first.");
                         continue;

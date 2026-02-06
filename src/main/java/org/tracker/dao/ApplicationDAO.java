@@ -2,7 +2,7 @@ package org.tracker.dao;
 
 import org.tracker.database.DatabaseConnection;
 import org.tracker.entity.Application;
-import org.tracker.HashUtil;  // Add this import statement
+import org.tracker.HashUtil;
 
 
 import java.sql.*;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ApplicationDAO {
 
-    // Method to add an application
+
     public void addApplication(int userId, Application app) throws Exception {
         String sql = "INSERT INTO applications(user_id, company, position, status) VALUES (?, ?, ?, ?)";
 
@@ -28,7 +28,6 @@ public class ApplicationDAO {
         }
     }
 
-    // Method to get applications by userId (updated to filter by userId)
     public List<Application> getAllApplications(int userId) throws Exception {
         List<Application> list = new ArrayList<>();
 
@@ -55,7 +54,7 @@ public class ApplicationDAO {
         return list;
     }
 
-    // Method to update the application status
+
     public void updateStatus(int id, String newStatus) throws Exception {
         String sql = "UPDATE applications SET status = ? WHERE id = ?";
 
@@ -72,24 +71,25 @@ public class ApplicationDAO {
                 System.out.println("Status updated!");
             }
         }
+
     }
 
-    // Method to register a user
+
     public void registerUser(String username, String password) throws Exception {
         String sql = "INSERT INTO users (username, password_hash, created_at) VALUES (?, ?, NOW())";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, username);  // First parameter is username
-            ps.setString(2, password);  // Second parameter is password (plain text)
+            ps.setString(1, username);
+            ps.setString(2, password);
 
             ps.executeUpdate();
             System.out.println("User registered successfully!");
         }
     }
 
-    // Method to login the user
+
     public boolean loginUser(String username, String password) throws Exception {
         String sql = "SELECT * FROM users WHERE username = ? AND password_hash = ?";
 
@@ -105,7 +105,7 @@ public class ApplicationDAO {
         }
     }
 
-    // Get userId by username
+
     public int getUserIdFromDatabase(String username) throws Exception {
         String sql = "SELECT id FROM users WHERE username = ?";
 
@@ -120,6 +120,6 @@ public class ApplicationDAO {
                 }
             }
         }
-        return 0;  // Return 0 if no user is found
+        return 0;
     }
 }
