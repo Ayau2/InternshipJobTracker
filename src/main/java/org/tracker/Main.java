@@ -1,6 +1,5 @@
 package org.tracker;
 
-import org.tracker.database.DatabaseConnection;
 import org.tracker.dao.ApplicationDAO;
 import org.tracker.entity.Application;
 import java.sql.*;
@@ -22,6 +21,7 @@ public class Main {
                 System.out.println("3. Add application");
                 System.out.println("4. View applications");
                 System.out.println("5. Update status");
+                System.out.println("6. Delete application");
                 System.out.println("0. Exit");
                 System.out.print("Choose option: ");
 
@@ -44,19 +44,16 @@ public class Main {
                     System.out.print("Enter password: ");
                     String password = sc.nextLine();
 
-
                     dao.registerUser(username, password);
                     System.out.println("User registered successfully!");
                 }
 
                 if (choice == 2) {
-
                     System.out.print("Enter username: ");
                     String username = sc.nextLine();
 
                     System.out.print("Enter password: ");
                     String password = sc.nextLine();
-
 
                     if (dao.loginUser(username, password)) {
                         System.out.println("Login successful!");
@@ -67,7 +64,6 @@ public class Main {
                 }
 
                 if (choice == 3) {
-                    // Add application
                     if (userId == 0) {
                         System.out.println("Please login first.");
                         continue;
@@ -87,7 +83,6 @@ public class Main {
                 }
 
                 if (choice == 4) {
-                    // View applications
                     if (userId == 0) {
                         System.out.println("Please login first.");
                         continue;
@@ -105,7 +100,6 @@ public class Main {
                         );
                     }
                 }
-
 
                 if (choice == 5) {
                     if (userId == 0) {
@@ -127,6 +121,23 @@ public class Main {
                     dao.updateStatus(id, newStatus);
                 }
 
+                if (choice == 6) {
+                    if (userId == 0) {
+                        System.out.println("Please login first.");
+                        continue;
+                    }
+
+                    System.out.print("Enter application ID to delete: ");
+                    String idInput = sc.nextLine().trim();
+                    if (idInput.isEmpty()) {
+                        System.out.println("ID cannot be empty.");
+                        continue;
+                    }
+                    int id = Integer.parseInt(idInput);
+
+                    dao.deleteApplication(id);
+                    System.out.println("Application deleted!");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

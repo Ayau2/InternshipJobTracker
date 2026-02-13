@@ -76,13 +76,14 @@ public class ApplicationDAO {
 
 
     public void registerUser(String username, String password) throws Exception {
+        String hashedPassword = HashUtil.hashPassword(password);
         String sql = "INSERT INTO users (username, password_hash, created_at) VALUES (?, ?, NOW())";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, username);
-            ps.setString(2, password);
+            ps.setString(2, hashedPassword);
 
             ps.executeUpdate();
             System.out.println("User registered successfully!");
@@ -91,18 +92,22 @@ public class ApplicationDAO {
 
 
     public boolean loginUser(String username, String password) throws Exception {
-        String sql = "SELECT * FROM users WHERE username = ? AND password_hash = ?";
+        String sql = "SELECT password_hash FROM users WHERE username = ? ";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, username);
-            ps.setString(2, password);
 
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.next();
+                if (rs.next()) {
+                    String storedHash = rs.getString("password_hash");
+
+                    return HashUtil.checkPassword(password, storedHash);
+                }
             }
         }
+        return false;
     }
 
 
@@ -121,5 +126,21 @@ public class ApplicationDAO {
             }
         }
         return 0;
+    }
+    public void deleteApplication(int id) throws Exception {
+        String sql = "DELETE FROM applications WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            int rows = ps.executeUpdate();
+            if (rows == 0) {
+                System.out.println("No application found with id " + id);
+            } else {
+                System.out.println("Application deleted!");
+            }
+        }
     }
 }
